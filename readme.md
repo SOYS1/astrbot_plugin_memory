@@ -226,11 +226,10 @@ python test_personal_memory.py
 
 MIT License - 详见 LICENSE 文件
 
-## 🙋‍♂️ 联系我们
+## 🙋‍♂️ 联系我
 
-- **QQ群**：AstrBot官方群
 - **GitHub**：提交Issue
-- **邮件**：dev@astrbot.com
+- **邮件**：1958014593@qq.com
 
 ---
 

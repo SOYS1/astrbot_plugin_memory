@@ -27,7 +27,7 @@ except ImportError:
     author="AstrBot团队",
     desc="个人记忆管理插件（精美图片回复版）",
     version="2.0.0",
-    repo="https://github.com/AstrBotDevs/astrbot_plugin_personal_memory"
+    repo="https://github.com/SOYS1/astrbot_plugin_memory"
 )
 class PersonalMemoryPlugin(Star):
     """个人记忆插件主类"""
@@ -218,46 +218,46 @@ class PersonalMemoryPlugin(Star):
             content = message[2:].strip()
             if not content:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "格式错误！用法: /记住 关键词 内容", action="添加失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "格式错误！用法: /记住 关键词 内容", action="添加失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 格式错误！用法: /记住 关键词 内容")
                 return
-            
+
             parts = content.split(None, 1)
             if len(parts) < 2:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "格式错误！用法: /记住 关键词 内容", action="添加失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "格式错误！用法: /记住 关键词 内容", action="添加失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 格式错误！用法: /记住 关键词 内容")
                 return
-            
+
             key, value = parts[0], parts[1]
             user_id = event.get_sender_id()
             user_name = event.get_sender_name() or "用户"
-            
+
             if self._add_memory(user_id, key, value):
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card(key, value, action="记住", user_name=user_name)
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card(key, value, action="记住", user_name=user_name)
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result(f"✅ 已记住: {key}")
             else:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "添加失败，请重试", action="添加失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "添加失败，请重试", action="添加失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 添加失败，请重试")
-                    
+
         except Exception as e:
             logger.error(f"添加记忆指令错误: {e}")
             if HAS_PILLOW:
-                img_base64 = self._create_memory_card("错误", "系统错误，请稍后重试", action="添加失败")
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_card("错误", "系统错误，请稍后重试", action="添加失败")
+                yield event.image_result(img_path)
             else:
                 yield event.plain_result("❌ 系统错误，请稍后重试")
-    
+
     @filter.command("回忆")
     async def get_memory_command(self, event: AstrMessageEvent):
         """获取记忆指令
@@ -268,41 +268,41 @@ class PersonalMemoryPlugin(Star):
             message = event.message_str.strip()
             if not message.startswith("回忆"):
                 return
-            
+
             key = message[2:].strip()
             if not key:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "格式错误！用法: /回忆 关键词", action="回忆失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "格式错误！用法: /回忆 关键词", action="回忆失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 格式错误！用法: /回忆 关键词")
                 return
-            
+
             user_id = event.get_sender_id()
             user_name = event.get_sender_name() or "用户"
             memory = self._get_memory(user_id, key)
-            
+
             if memory:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card(key, memory['content'], action="回忆", user_name=user_name)
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card(key, memory['content'], action="回忆", user_name=user_name)
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result(f"📋 {key}: {memory['content']}")
             else:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("未找到", f"没有找到关于 '{key}' 的记忆", action="回忆失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("未找到", f"没有找到关于 '{key}' 的记忆", action="回忆失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 没有找到相关记忆")
-                    
+
         except Exception as e:
             logger.error(f"获取记忆指令错误: {e}")
             if HAS_PILLOW:
-                img_base64 = self._create_memory_card("错误", "系统错误，请稍后重试", action="回忆失败")
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_card("错误", "系统错误，请稍后重试", action="回忆失败")
+                yield event.image_result(img_path)
             else:
                 yield event.plain_result("❌ 系统错误，请稍后重试")
-    
+
     @filter.command("搜索记忆")
     async def search_memory_command(self, event: AstrMessageEvent):
         """搜索记忆指令
@@ -313,49 +313,49 @@ class PersonalMemoryPlugin(Star):
             message = event.message_str.strip()
             if not message.startswith("搜索记忆"):
                 return
-            
+
             keyword = message[4:].strip()
             if not keyword:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "格式错误！用法: /搜索记忆 关键词", action="搜索失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "格式错误！用法: /搜索记忆 关键词", action="搜索失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 格式错误！用法: /搜索记忆 关键词")
                 return
-            
+
             user_id = event.get_sender_id()
             user_name = event.get_sender_name() or "用户"
             results = self._search_memories(user_id, keyword)
-            
+
             if not results:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("未找到", f"没有找到关于 '{keyword}' 的记忆", action="搜索失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("未找到", f"没有找到关于 '{keyword}' 的记忆", action="搜索失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 没有找到相关记忆")
                 return
-            
+
             if HAS_PILLOW:
-                img_base64 = self._create_memory_list_image(results, user_name)
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_list_image(results, user_name)
+                yield event.image_result(img_path)
             else:
                 response = f"🔍 找到 {len(results)} 条相关记忆:\n"
                 for key, memory in results[:10]:
                     response += f"- {key}: {memory['content']}\n"
-                
+
                 if len(results) > 10:
                     response += f"... 还有 {len(results) - 10} 条"
-                
+
                 yield event.plain_result(response.strip())
-                
+
         except Exception as e:
             logger.error(f"搜索记忆指令错误: {e}")
             if HAS_PILLOW:
-                img_base64 = self._create_memory_card("错误", "系统错误，请稍后重试", action="搜索失败")
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_card("错误", "系统错误，请稍后重试", action="搜索失败")
+                yield event.image_result(img_path)
             else:
                 yield event.plain_result("❌ 系统错误，请稍后重试")
-    
+
     @filter.command("我的记忆")
     async def list_memories_command(self, event: AstrMessageEvent):
         """列出所有记忆指令
@@ -365,36 +365,36 @@ class PersonalMemoryPlugin(Star):
             user_id = event.get_sender_id()
             user_name = event.get_sender_name() or "用户"
             memories = self._get_user_memories(user_id)
-            
+
             if not memories:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("提示", "你还没有任何记忆", action="我的记忆")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("提示", "你还没有任何记忆", action="我的记忆")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("📭 你还没有任何记忆")
                 return
-            
+
             if HAS_PILLOW:
-                img_base64 = self._create_memory_list_image(memories, user_name)
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_list_image(memories, user_name)
+                yield event.image_result(img_path)
             else:
                 response = f"📚 你共有 {len(memories)} 条记忆:\n"
                 for key, memory in memories[:10]:
                     response += f"- {key}: {memory['content']}\n"
-                
+
                 if len(memories) > 10:
                     response += f"... 还有 {len(memories) - 10} 条"
-                
+
                 yield event.plain_result(response.strip())
-                
+
         except Exception as e:
             logger.error(f"列出记忆指令错误: {e}")
             if HAS_PILLOW:
-                img_base64 = self._create_memory_card("错误", "系统错误，请稍后重试", action="我的记忆")
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_card("错误", "系统错误，请稍后重试", action="我的记忆")
+                yield event.image_result(img_path)
             else:
                 yield event.plain_result("❌ 系统错误，请稍后重试")
-    
+
     @filter.command("删除记忆")
     async def delete_memory_command(self, event: AstrMessageEvent):
         """删除记忆指令
@@ -405,43 +405,54 @@ class PersonalMemoryPlugin(Star):
             message = event.message_str.strip()
             if not message.startswith("删除记忆"):
                 return
-            
+
             key = message[4:].strip()
             if not key:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("错误", "格式错误！用法: /删除记忆 关键词", action="删除失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("错误", "格式错误！用法: /删除记忆 关键词", action="删除失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 格式错误！用法: /删除记忆 关键词")
                 return
-            
+
             user_id = event.get_sender_id()
             user_name = event.get_sender_name() or "用户"
-            
+
             if self._delete_memory(user_id, key):
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("成功", f"已删除记忆: {key}", action="删除成功")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("成功", f"已删除记忆: {key}", action="删除成功")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result(f"✅ 已删除记忆: {key}")
             else:
                 if HAS_PILLOW:
-                    img_base64 = self._create_memory_card("未找到", f"没有找到关于 '{key}' 的记忆", action="删除失败")
-                    yield event.image_result(img_base64)
+                    img_path = self._create_memory_card("未找到", f"没有找到关于 '{key}' 的记忆", action="删除失败")
+                    yield event.image_result(img_path)
                 else:
                     yield event.plain_result("❌ 没有找到相关记忆")
-                    
+
         except Exception as e:
             logger.error(f"删除记忆指令错误: {e}")
             if HAS_PILLOW:
-                img_base64 = self._create_memory_card("错误", "系统错误，请稍后重试", action="删除失败")
-                yield event.image_result(img_base64)
+                img_path = self._create_memory_card("错误", "系统错误，请稍后重试", action="删除失败")
+                yield event.image_result(img_path)
             else:
                 yield event.plain_result("❌ 系统错误，请稍后重试")
-    
+
     async def terminate(self):
-        """插件卸载时保存数据"""
+        """插件卸载时保存数据并清理临时文件"""
         self._save_memories()
+        
+        # 清理临时文件
+        temp_dir = os.path.join(self.data_dir, "temp")
+        if os.path.exists(temp_dir):
+            try:
+                import shutil
+                shutil.rmtree(temp_dir)
+                logger.info("个人记忆插件临时文件已清理")
+            except Exception as e:
+                logger.error(f"清理临时文件失败: {e}")
+        
         logger.info("个人记忆插件已卸载，数据已保存")
     
     def _create_memory_card(self, title: str, content: str, tags: List[str] = None, 
@@ -495,13 +506,15 @@ class PersonalMemoryPlugin(Star):
             time_text = datetime.now().strftime("%Y-%m-%d %H:%M")
             draw.text((self.card_width - 150, height - 30), time_text, fill=self.muted_color, font=tag_font)
             
-            # 转换为base64
-            buffer = io.BytesIO()
-            img.save(buffer, format='PNG', quality=85, optimize=True)
-            buffer.seek(0)
-            img_base64 = base64.b64encode(buffer.getvalue()).decode()
+            # 保存为临时文件
+            temp_dir = os.path.join(self.data_dir, "temp")
+            if not os.path.exists(temp_dir):
+                os.makedirs(temp_dir)
             
-            return f"data:image/png;base64,{img_base64}"
+            temp_path = os.path.join(temp_dir, f"memory_card_{int(time.time() * 1000)}.png")
+            img.save(temp_path, format='PNG', quality=85, optimize=True)
+            
+            return temp_path
             
         except Exception as e:
             logger.error(f"创建图片失败: {e}")
@@ -556,13 +569,15 @@ class PersonalMemoryPlugin(Star):
                 
                 y_pos += 75
             
-            # 转换为base64
-            buffer = io.BytesIO()
-            img.save(buffer, format='PNG', quality=85, optimize=True)
-            buffer.seek(0)
-            img_base64 = base64.b64encode(buffer.getvalue()).decode()
+            # 保存为临时文件
+            temp_dir = os.path.join(self.data_dir, "temp")
+            if not os.path.exists(temp_dir):
+                os.makedirs(temp_dir)
             
-            return f"data:image/png;base64,{img_base64}"
+            temp_path = os.path.join(temp_dir, f"memory_list_{int(time.time() * 1000)}.png")
+            img.save(temp_path, format='PNG', quality=85, optimize=True)
+            
+            return temp_path
             
         except Exception as e:
             logger.error(f"创建列表图片失败: {e}")

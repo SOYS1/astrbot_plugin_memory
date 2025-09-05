@@ -27,6 +27,6 @@ help:
 
     Dependencies: Pillow library (for image generation)
 version: 2.0.0
-repo: https://github.com/AstrBotDevs/astrbot_plugin_personal_memory
+repo: https://github.com/SOYS1/astrbot_plugin_memory
 requirements:
   - Pillow>=9.0.0
