@@ -1,5 +1,42 @@
-name: helloworld # 这是你的插件的唯一识别名。
-desc: 这是 AstrBot 的默认插件，支持关键词回复。 # 插件简短描述
-version: v1.3 # 插件版本号。格式：v1.1.1 或者 v1.1
-author: Soulter # 作者
-repo: https://github.com/Soulter/helloworld # 插件的仓库地址
+name: personal_memory
+author: AstrBot团队
+desc:
+  zh: 个人记忆管理插件 - 轻量优化版，专为2核2G云服务器设计
+  en: Personal memory management plugin - lightweight optimized for 2-core 2GB cloud servers
+help:
+  zh: |
+    个人记忆插件，可以记住、回忆和搜索你的个人记忆。
+    
+    指令列表：
+    - /记住 关键词 内容 - 添加记忆
+    - /回忆 关键词 - 获取记忆
+    - /搜索记忆 关键词 - 搜索记忆
+    - /我的记忆 - 查看所有记忆
+    - /删除记忆 关键词 - 删除记忆
+    
+    示例：
+    - /记住 生日 2024年12月25日
+    - /回忆 生日
+    - /搜索记忆 密码
+    - /我的记忆
+    - /删除记忆 生日
+  en: |
+    Personal memory plugin to remember, recall, and search your personal memories.
+    
+    Commands:
+    - /remember keyword content - Add memory
+    - /recall keyword - Get memory
+    - /search keyword - Search memories
+    - /my_memories - List all memories
+    - /delete keyword - Delete memory
+    
+    Examples:
+    - /remember birthday 2024-12-25
+    - /recall birthday
+    - /search password
+    - /my_memories
+    - /delete birthday
+version: v1.0.0
+repo: https://github.com/AstrBotDevs/astrbot_plugin_personal_memory
+requirements:
+  - astrbot>=3.0.0
